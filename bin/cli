@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var colors = require('colors'); 
+var pframe = require('../index');
+// var fs = require('fs');
+
+var args=process.argv.slice(2);
+
+var showHelp=function(){
+  console.log([
+    'usage: pframe [options]',
+    ''
+    ].join('\n').white);
+  console.log([
+    'options:',
+    '',
+    '  -dp  <version>  Download the playframework with specified version and setup the environment,',
+    '  -lp             List all the available version for playframework.',
+    '                  default the latest version.',
+    '  -e   <dirname>  Establish a project seed in the given folder, by default, using the SPA for the ',
+    '                  background system.',
+    '  -em  <dirname>  Establish a project seed in the given folder without the SPA structure.',
+    '  -v              Print current version.',
+    '',
+    '  -h              Print this list and exit.'
+  ].join('\n').green);
+  process.exit();
+};
+
+
+switch(args[0]){
+  case '-dp':pframe.downloadPlay(args[1]);break;
+  case '-lp':pframe.listPlayVersion();break;
+	case '-e':pframe.generateSeed(true,args[1]);break;
+  case '-em':pframe.generateSeed(false,args[1]);break;
+	case '-v':pframe.printVersion();break;
+	default:showHelp();
+}

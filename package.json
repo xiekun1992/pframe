@@ -1,0 +1,17 @@
+{
+  "name": "pframe",
+  "version": "1.0.14",
+  "description": "a cli tool for the seed of playframework and angularjs integration",
+  "main": "index.js",
+  "bin": {
+    "pframe": "./bin/cli"
+  },
+  "scripts": {
+    "start":""
+  },
+  "author": "xiekun1992",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.1.2"
+  }
+}
