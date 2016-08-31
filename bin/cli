@@ -4,8 +4,6 @@
 
 var colors = require('colors'); 
 var pframe = require('../index');
-// var fs = require('fs');
-
 var args=process.argv.slice(2);
 
 var showHelp=function(){
@@ -30,7 +28,6 @@ var showHelp=function(){
   ].join('\n').green);
   process.exit();
 };
-
 
 switch(args[0]){
   case '-dp':pframe.downloadPlay(args[1]);break;
