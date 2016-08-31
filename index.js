@@ -72,7 +72,7 @@ function httpRequest(){
 		console.log('fail to gain play version list.'.red);
 	}
 	res.on('data', function(d){
-	    process.stdout.write(d);
+	    process.stdout.write('available version in pframe:\n'+d);
 	});
 
 	}).on('error', function(e){

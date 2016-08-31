@@ -1,6 +1,6 @@
 {
   "name": "pframe",
-  "version": "1.3.17",
+  "version": "1.3.18",
   "description": "a cli tool for the seed of playframework and angularjs integration",
   "main": "index.js",
   "bin": {
