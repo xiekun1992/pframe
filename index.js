@@ -31,12 +31,14 @@ Pfrme.prototype.printVersion=function(){
 		// console.log(res)
 		if(res && res.length>1){
 			console.log('play: '+res[1]);
+		}else{
+			console.log('play: '+'unknown'.red);
+			console.log('please add playframework path to the environment variable first.'.red);
 		}
 	});
 	console.log('pframe: '+this.version);
 	terminal.stdin.write('play version\n');
 	terminal.stdin.end();
-	// process.exit();
 };
 Pfrme.prototype.downloadPlay=function(version){
 	console.log('download playframework');
@@ -54,8 +56,6 @@ Pfrme.prototype.generateSeed=function(needSPA,folder){
 		if(res && res.length>1){
 			console.log(res[1].red+' already exists.');
 			process.exit();
-		}else if(stringData.indexOf('\'play\' ')!=-1){
-			console.log('please add playframework to the environment variable first.'.red);
 		}else if(stringData.indexOf('OK, the application is created.')!=-1){
 			//生成前端种子文件夹
 			var assetsDir=path.join(pframePath,'/assets');
@@ -66,6 +66,13 @@ Pfrme.prototype.generateSeed=function(needSPA,folder){
 	terminal.stdin.write('play new '+folder+'\n');
 	terminal.stdin.write(folder+'\n');
 	terminal.stdin.end();
+	setTimeout(function(){
+		try{
+			fs.statSync(path.join(process.cwd(),'/',folder));
+		}catch(e){
+			console.log('please add playframework path to the environment variable first.'.red);
+		}
+	},1000);
 };
 function httpRequest(){
 	https.get(playOnlineSourceUrl+'version.txt', function(res){
