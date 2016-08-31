@@ -6,20 +6,21 @@ var path=require('path');
 var childProcess=require('child_process');
 
 var cliType=(process.platform=='win32'?'cmd':'bash');
-var terminal;
+var terminal,pframePath;
 	
 
 function Pfrme(){
-	var availablePath,pframePath;
+	var availablePath;
 	try{
-		availablePath=process.env.APPDATA,'/npm/node_modules/pframe','/package.json');
-		fs.statSync(path.join(availablePath);
+		pframePath=path.join(process.env.APPDATA,'/npm/node_modules/pframe');
+		availablePath=path.join(process.env.APPDATA,'/npm/node_modules/pframe','/package.json');
+		fs.statSync(availablePath);
 	}catch(e){
-		availablePath=path.join(process.execPath,'../node_modules/pframe','/package.json')
+		pframePath=path.join(process.execPath,'../node_modules/pframe');
+		availablePath=path.join(process.execPath,'../node_modules/pframe','/package.json');
 		fs.statSync(availablePath);
 	}
-	pframePath=availablePath;
-	this.version=JSON.parse(fs.readFileSync(pframePath,'utf8')).version;
+	this.version=JSON.parse(fs.readFileSync(availablePath,'utf8')).version;
 }
 Pfrme.prototype.printVersion=function(){
 	console.log(this.version);
@@ -53,7 +54,7 @@ Pfrme.prototype.generateSeed=function(needSPA,folder){
 			process.exit();
 		}else if(stringData.indexOf('OK, the application is created.')!=-1){
 			//生成前端种子文件夹
-			var assetsDir=path.join(process.env.APPDATA,'/npm/node_modules/pframe','/assets');
+			var assetsDir=path.join(pframePath,'/assets');
 			copy(assetsDir,path.join(process.cwd(),'/',folder));
 			console.log('project seed '+path.join(process.cwd(),'/',folder).green+' has already been created.');
 		}
