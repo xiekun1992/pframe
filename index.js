@@ -1,13 +1,14 @@
 'use strict';
 
 var colors = require('colors'); 
+var https=require('https');
 var fs=require('fs');
 var path=require('path');
 var childProcess=require('child_process');
 
 var cliType=(process.platform=='win32'?'cmd':'bash');
 var terminal,pframePath;
-	
+var playOnlineSourceUrl="https://xiekun1992.github.io/asset/playframework/";
 
 function Pfrme(){
 	var availablePath;
@@ -23,25 +24,26 @@ function Pfrme(){
 	this.version=JSON.parse(fs.readFileSync(availablePath,'utf8')).version;
 }
 Pfrme.prototype.printVersion=function(){
-	console.log(this.version);
-	process.exit();
-};
-Pfrme.prototype.downloadPlay=function(version){
-	console.log('download playframework');
-	process.exit();
-};
-Pfrme.prototype.listPlayVersion=function(){
 	terminal=childProcess.spawn(cliType);
 	terminal.stdout.on('data',function(data){
 		var stringData=String.fromCharCode.apply(null,data);
 		var res=stringData.match(/play!\s+([0-9\.]+),/);
 		// console.log(res)
 		if(res && res.length>1){
-			console.log(res[1]);
+			console.log('play: '+res[1]);
 		}
 	});
+	console.log('pframe: '+this.version);
 	terminal.stdin.write('play version\n');
 	terminal.stdin.end();
+	// process.exit();
+};
+Pfrme.prototype.downloadPlay=function(version){
+	console.log('download playframework');
+	process.exit();
+};
+Pfrme.prototype.listPlayVersion=function(){
+	httpRequest();
 };
 Pfrme.prototype.generateSeed=function(needSPA,folder){
 	terminal=childProcess.spawn(cliType);
@@ -63,6 +65,20 @@ Pfrme.prototype.generateSeed=function(needSPA,folder){
 	terminal.stdin.write(folder+'\n');
 	terminal.stdin.end();
 };
+function httpRequest(){
+	https.get(playOnlineSourceUrl+'version.txt', function(res){
+	// console.log('statusCode:', res.statusCode);
+	if(res.statusCode!=200){
+		console.log('fail to gain play version list.'.red);
+	}
+	res.on('data', function(d){
+	    process.stdout.write(d);
+	});
+
+	}).on('error', function(e){
+	  console.error(e);
+	});
+}
 function copy(srcPath,destPath){
 	var contents=fs.readdirSync(srcPath),
 			  	 readStream,
