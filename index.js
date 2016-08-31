@@ -10,7 +10,16 @@ var terminal;
 	
 
 function Pfrme(){
-	this.version=JSON.parse(fs.readFileSync(path.join(process.env.APPDATA,'/npm/node_modules/pframe','/package.json'),'utf8')).version;
+	var availablePath,pframePath;
+	try{
+		availablePath=process.env.APPDATA,'/npm/node_modules/pframe','/package.json');
+		fs.statSync(path.join(availablePath);
+	}catch(e){
+		availablePath=path.join(process.execPath,'../node_modules/pframe','/package.json')
+		fs.statSync(availablePath);
+	}
+	pframePath=availablePath;
+	this.version=JSON.parse(fs.readFileSync(pframePath,'utf8')).version;
 }
 Pfrme.prototype.printVersion=function(){
 	console.log(this.version);
