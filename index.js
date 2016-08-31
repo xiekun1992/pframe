@@ -54,6 +54,8 @@ Pfrme.prototype.generateSeed=function(needSPA,folder){
 		if(res && res.length>1){
 			console.log(res[1].red+' already exists.');
 			process.exit();
+		}else if(stringData.indexOf('\'play\' ')!=-1){
+			console.log('please add playframework to the environment variable first.'.red);
 		}else if(stringData.indexOf('OK, the application is created.')!=-1){
 			//生成前端种子文件夹
 			var assetsDir=path.join(pframePath,'/assets');
