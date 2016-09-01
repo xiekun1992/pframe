@@ -41,8 +41,46 @@ Pfrme.prototype.printVersion=function(){
 	terminal.stdin.end();
 };
 Pfrme.prototype.downloadPlay=function(version){
-	console.log('download playframework');
-	process.exit();
+	var playSize=0,totalSize=0,progressNum=0,chunks=[],size;
+	console.log('download play-'+version+'.zip');
+	https.get(playOnlineSourceUrl+'play-'+version+'.zip', function(res){
+//	console.log('statusCode:', res.statusCode);
+		totalSize=res.headers['content-length'];
+		
+		if(res.statusCode!=200){
+			console.log('fail to download specified play version.'.red);
+		}else{
+			process.stdout.write('total size: '+res.headers['content-length']+' Bytes.\ndownloading ');
+			res.on('data', function(d){
+				chunks.push(d);
+				size+=d.length;
+				playSize+=d;
+				var percent=((playSize.length/totalSize)*100).toFixed(2);
+				//console.log(percent);
+				if(percent%2>0 && Math.round(percent/2)!=progressNum){
+					for(var i=0;i<Math.round(percent/2)-progressNum;i++){
+						process.stdout.write('='.green);	
+					}
+					progressNum=Math.round(percent/2);
+					
+				}
+
+			});
+			res.on('end',function(){
+				console.log(' finished');
+				  var data = new Buffer(size);  
+			      for (var i = 0, pos = 0, l = chunks.length; i < l; i++) {  
+			        var chunk = chunks[i];  
+			        chunk.copy(data, pos);  
+			        pos += chunk.length;  
+			      }  
+				fs.writeFileSync('play-'+version+'.zip', data);
+			});
+		}
+	}).on('error', function(e){
+	  console.error(e);
+	});
+	//process.exit();
 };
 Pfrme.prototype.listPlayVersion=function(){
 	httpRequest();
@@ -76,16 +114,17 @@ Pfrme.prototype.generateSeed=function(needSPA,folder){
 };
 function httpRequest(){
 	https.get(playOnlineSourceUrl+'version.txt', function(res){
-	// console.log('statusCode:', res.statusCode);
-	if(res.statusCode!=200){
-		console.log('fail to gain play version list.'.red);
-	}
-	res.on('data', function(d){
-	    process.stdout.write('available version in pframe:\n'+d);
-	});
+		// console.log('statusCode:', res.statusCode);
+		if(res.statusCode!=200){
+			console.log('fail to gain play version list.'.red);
+		}
+		res.on('data', function(d){
+		    process.stdout.write('available version in pframe:\n'+d);
+		});
 
-	}).on('error', function(e){
-	  console.error(e);
+		res.on('error', function(e){
+		  console.error(e);
+		});
 	});
 }
 function copy(srcPath,destPath){
