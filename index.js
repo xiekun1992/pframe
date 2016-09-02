@@ -50,10 +50,10 @@ Pfrme.prototype.downloadPlay=function(version){
 		if(res.statusCode!=200){
 			console.log('fail to download specified play version.'.red);
 		}else{
-			process.stdout.write('total size: '+res.headers['content-length']+' Bytes.\ndownloading ');
+			size=parseInt(res.headers['content-length']);
+			process.stdout.write('total size: '+size+' Bytes\ndownloading [');
 			res.on('data', function(d){
 				chunks.push(d);
-				size+=d.length;
 				playSize+=d;
 				var percent=((playSize.length/totalSize)*100).toFixed(2);
 				//console.log(percent);
@@ -67,7 +67,8 @@ Pfrme.prototype.downloadPlay=function(version){
 
 			});
 			res.on('end',function(){
-				console.log(' finished');
+				console.log('] finished\n');
+				console.log('file has been downloaded in the current folder\nplease add playframework path to the environment variable'.green);
 				  var data = new Buffer(size);  
 			      for (var i = 0, pos = 0, l = chunks.length; i < l; i++) {  
 			        var chunk = chunks[i];  
